@@ -10,6 +10,18 @@
 
 <body>
     <div class="container">
+
+        <br>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul id="messages" class="list-unstyled">
+            {% for message in messages %}
+            <li class="alert alert-success">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
         <div class="page-header">
             <h1>{{ title }}</h1>
         </div>
@@ -18,4 +30,5 @@
 
     </div>
 </body>
+
 </html>
