@@ -23,38 +23,39 @@ app.secret_key = 'tribo'
 #####################
 @app.route('/')
 def mainpage():
-    return render_template('login.html', title='Enter with your credentials')
-
+    next = request.args.get('next')
+    return render_template('login.html', title='Enter with your credentials', next=next)
 
 @app.route('/list')
 def games_list():
+    if 'current_user' not in session or session['current_user'] == None:
+        return redirect('/?next=list')
     return render_template('list.html', title='My new title', jogos=games)
 
 @app.route('/insert')
 def insertpage():
+    if 'current_user' not in session or session['current_user'] == None:
+        return redirect('/?next=insert')
     return render_template('insert.html', title='Insert a new game')
-
-
-@app.route('/login')
-def login():
-    return render_template('login.html', title='Enter with your credentials')
 
 @app.post('/auth')
 def authenticate():
     if request.form['user_password'] == 'chateau182':
         session['current_user'] = request.form['username']
         flash(f"Usuário {session['current_user']} logado com sucesso.")
-        return redirect('/list')
+
+        next_page = request.form['next']
+        return redirect(f'/{next_page}')
     
     else:
         flash('Algo deu errado... Por favor, revise seus dados e tente novamente.')
-        return redirect('/login')
+        return redirect('/')
 
 @app.route('/logout')
 def logout():
     session['current_user'] = None
     flash(f"Usuário deslogado.")
-    return redirect('/login')
+    return redirect('/')
 
 
 #####################
@@ -71,7 +72,7 @@ def new_game():
     novoJogo = meusJogos(nome, categoria, console)
     games.append(novoJogo)
 
-    return redirect('/')
+    return redirect('/list')
 
 
 app.run(debug=True)
