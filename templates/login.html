@@ -1,7 +1,7 @@
 {% extends "template.html" %}
 {% block content %}
 
-<form action="/auth" method="post">
+<form action="{{ url_for('authenticate') }}" method="post">
   <input type="hidden" name="next" value="{{ next }}">
     <!-- Email input -->
     <div class="form-outline mb-4">
